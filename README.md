@@ -17,7 +17,7 @@ A single page web application which enables users to edit their images. Build wi
 ## TODO
 
 -   [ ] Validate inputs.
--   [ ] Rewrite crop component with `e.nativeEvent`
+-   [ ] Rewrite the crop component with `e.nativeEvent`
 
 ## Live Demo :fire:
 
