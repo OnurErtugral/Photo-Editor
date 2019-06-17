@@ -1,0 +1,12 @@
+.sidebar-icons {
+    color: white;
+    padding: 12px;
+}
+
+.sidebar-icons:hover {
+    color: #0099ff;
+}
+
+.sidebar-icons .active {
+    color: #0099ff;
+}

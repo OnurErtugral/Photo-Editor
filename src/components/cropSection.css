@@ -1,0 +1,41 @@
+.crop-section-wrapper {
+    width: 175px;
+}
+
+.crop-section {
+    display: flex;
+    width: 100% !important;
+}
+
+.crop-section .left-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    color: #f1f1f1;
+}
+
+.crop-section .left-section label {
+    margin-top: 14px;
+}
+
+.crop-section .right-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    padding: 0px 10px;
+}
+
+.crop-section .right-section label {
+    width: 60px;
+    margin-top: 10px;
+    color: #f1f1f1;
+    font-size: 18.5px;
+}
+
+.crop-section-wrapper button {
+    float: right;
+    margin: 5px 10px;
+}

@@ -1,0 +1,49 @@
+.crop-div {
+    border: 3px solid white;
+    z-index: 100;
+    position: absolute;
+}
+
+.crop-div .RB {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    height: 14px;
+    width: 14px;
+    background-color: white;
+    cursor: nw-resize;
+    border-top-left-radius: 9px;
+}
+
+.crop-div .RT {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 14px;
+    width: 14px;
+    background-color: white;
+    cursor: ne-resize;
+    border-bottom-left-radius: 9px;
+}
+
+.crop-div .LT {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 14px;
+    width: 14px;
+    background-color: white;
+    cursor: se-resize;
+    border-bottom-right-radius: 9px;
+}
+
+.crop-div .LB {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 14px;
+    width: 14px;
+    background-color: white;
+    cursor: sw-resize;
+    border-top-right-radius: 9px;
+}

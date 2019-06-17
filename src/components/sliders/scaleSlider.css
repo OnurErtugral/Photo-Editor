@@ -1,0 +1,14 @@
+.scale-slider-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+}
+
+.scale-slider-wrapper label {
+    margin: auto 3px;
+    color: #f1f1f1;
+    min-width: 90px;
+    padding: 7px 0px;
+}
