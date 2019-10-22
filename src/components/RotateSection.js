@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import { withStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/lab/Slider";
 
 import "./rotationSection.css";
+
 const styles = {
     root: {
         width: "200px"

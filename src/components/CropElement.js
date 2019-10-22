@@ -6,35 +6,21 @@ import "./cropElement.css";
 
 const cardSource = {
     canDrag(props) {
-        console.log("candrag: " + props.flag);
         return !props.flag;
     },
     isDragging(props, monitor) {
-        // If your component gets unmounted while dragged
-        // (like a card in Kanban board dragged between lists)
-        // you can implement something like this to keep its
-        // appearance dragged:
-        //   return monitor.getItem().id === props.id
         return monitor.getItem().id === props.id;
     },
 
     beginDrag(props, monitor, component) {
-        // Return the data describing the dragged item
-
         const item = { id: props.id, left: props.left, top: props.top };
         return item;
     }
 };
 
-/**
- * Specifies which props to inject into your component.
- */
 function collect(connect, monitor) {
     return {
-        // Call this function inside render()
-        // to let React DnD handle the drag events:
         connectDragSource: connect.dragSource(),
-        // You can ask the monitor about the current drag state:
         isDragging: monitor.isDragging()
     };
 }
@@ -45,89 +31,104 @@ class CropElement extends Component {
         this.overlappingDiv = React.createRef();
         this.state = {
             clickedResizeRegion: false,
-            initialX: null,
-            initialY: null
+            cursor: null
         };
     }
 
-    handleOnMouseDown = e => {
+    handleMouseDown = e => {
         let postion = this.overlappingDiv.current.getBoundingClientRect();
         let canvasPosition = this.props.canvasRef.current.getBoundingClientRect();
 
-        let mouseX = e.screenX;
-        let mouseY = e.screenY;
+        // console.log("canvasPOsiton.TOP: " + canvasPosition.top);
 
-        let divTop = canvasPosition.top + this.props.top + 60 + 5;
-        let divBottom =
-            canvasPosition.top +
-            this.props.top +
-            this.props.cropDivHeight +
-            60 +
-            5;
-        let divLeft = canvasPosition.left + this.props.left;
-        let divRight =
-            canvasPosition.left + this.props.left + this.props.cropDivWidth;
+        let mouseXInCropElement = e.nativeEvent.offsetX;
+        let mouseYInCropElement = e.nativeEvent.offsetY;
 
-        console.log("divBottom: " + divBottom + " mouseY: " + mouseY);
-        let divWidth = this.props.cropDivWidth;
-        let divHeight = this.props.cropDivHeight;
-
-        let mouseXInsideDiv = mouseX - divLeft;
-        let mouseYInsideDiv = mouseY - divTop;
-
-        if (divBottom - mouseY < 17 && divRight - mouseX < 17) {
-            console.log("right bottom clicked");
-            this.props.setCropDivClickedResizeRegion("RB");
-            this.props.setCropDivInitialCoor(mouseX, mouseY);
-        } else if (divRight - mouseX < 17 && mouseY - divTop < 17) {
-            console.log("right Top clicked");
-            this.props.setCropDivClickedResizeRegion("RT");
-            this.props.setCropDivInitialCoor(mouseX, mouseY);
-        } else if (mouseX - divLeft < 17 && mouseY - divTop < 17) {
-            console.log("left Top clicked");
+        if (mouseXInCropElement < 10 && mouseYInCropElement < 10) {
+            console.log("LT");
             this.props.setCropDivClickedResizeRegion("LT");
-            this.props.setCropDivInitialCoor(mouseX, mouseY);
-        } else if (mouseX - divLeft < 17 && divBottom - mouseY < 17) {
-            console.log("left Btoom clicked");
+            this.props.setCropDivInitialCoor(
+                mouseXInCropElement,
+                mouseYInCropElement
+            );
+        } else if (
+            this.props.cropDivWidth - mouseXInCropElement < 10 &&
+            mouseYInCropElement < 10
+        ) {
+            console.log("RT");
+            this.props.setCropDivClickedResizeRegion("RT");
+            this.props.setCropDivInitialCoor(
+                mouseXInCropElement,
+                mouseYInCropElement
+            );
+        } else if (
+            this.props.cropDivWidth - mouseXInCropElement < 10 &&
+            this.props.cropDivHeight - mouseYInCropElement < 10
+        ) {
+            console.log("RB");
+            this.props.setCropDivClickedResizeRegion("RB");
+            this.props.setCropDivInitialCoor(
+                mouseXInCropElement,
+                mouseYInCropElement
+            );
+        } else if (
+            mouseXInCropElement < 10 &&
+            this.props.cropDivHeight - mouseYInCropElement < 10
+        ) {
+            console.log("LB");
             this.props.setCropDivClickedResizeRegion("LB");
-            this.props.setCropDivInitialCoor(mouseX, mouseY);
+            this.props.setCropDivInitialCoor(
+                mouseXInCropElement,
+                mouseYInCropElement
+            );
         }
     };
 
-    handleOnMouseUp = e => {
-        if (this.props.cropDivClickedResizeRegion === "RB") {
-            let mouseX = e.screenX;
-            let mouseY = e.screenY;
+    handleMouseUp = e => {
+        // console.log("mouse up");
+        let mouseXInCropElement = e.nativeEvent.offsetX;
+        let mouseYInCropElement = e.nativeEvent.offsetY;
 
-            let diffX = mouseX - this.props.cropDivClickInitialX;
-            let diffY = mouseY - this.props.cropDivClickInitialY;
+        let diffX = mouseXInCropElement - this.props.cropDivClickInitialX;
+        let diffY = mouseYInCropElement - this.props.cropDivClickInitialY;
+
+        if (this.props.cropDivClickedResizeRegion === "RB") {
             this.props.setCropDivSize("RB", diffX, diffY);
         } else if (this.props.cropDivClickedResizeRegion === "RT") {
-            let mouseX = e.screenX;
-            let mouseY = e.screenY;
-
-            let diffX = mouseX - this.props.cropDivClickInitialX;
-            let diffY = mouseY - this.props.cropDivClickInitialY;
-
             this.props.setCropDivLeftAndTop(diffY, 0);
             this.props.setCropDivSize("RT", diffX, -diffY);
         } else if (this.props.cropDivClickedResizeRegion === "LT") {
-            let mouseX = e.screenX;
-            let mouseY = e.screenY;
-
-            let diffX = mouseX - this.props.cropDivClickInitialX;
-            let diffY = mouseY - this.props.cropDivClickInitialY;
-
             this.props.setCropDivLeftAndTop(diffY, diffX);
             this.props.setCropDivSize("LT", -diffX, -diffY);
         } else if (this.props.cropDivClickedResizeRegion === "LB") {
-            let mouseX = e.screenX;
-            let mouseY = e.screenY;
-
-            let diffX = mouseX - this.props.cropDivClickInitialX;
-            let diffY = mouseY - this.props.cropDivClickInitialY;
             this.props.setCropDivLeftAndTop(0, diffX);
             this.props.setCropDivSize("LT", -diffX, diffY);
+        }
+    };
+
+    handleMouseMove = e => {
+        let mouseXInCropElement = e.nativeEvent.offsetX;
+        let mouseYInCropElement = e.nativeEvent.offsetY;
+        // console.log("INSIDE MOVE");
+        if (mouseXInCropElement < 10 && mouseYInCropElement < 10) {
+            this.setState({ cursor: "se-resize" });
+        } else if (
+            this.props.cropDivWidth - mouseXInCropElement < 10 &&
+            mouseYInCropElement < 10
+        ) {
+            this.setState({ cursor: "ne-resize" });
+        } else if (
+            this.props.cropDivWidth - mouseXInCropElement < 10 &&
+            this.props.cropDivHeight - mouseYInCropElement < 10
+        ) {
+            this.setState({ cursor: "nw-resize" });
+        } else if (
+            mouseXInCropElement < 10 &&
+            this.props.cropDivHeight - mouseYInCropElement < 10
+        ) {
+            this.setState({ cursor: "sw-resize" });
+        } else {
+            this.setState({ cursor: null });
         }
     };
 
@@ -141,22 +142,17 @@ class CropElement extends Component {
                 className="crop-div"
                 ref={this.overlappingDiv}
                 id={this.props.id}
-                onClick={this.handleOnClick}
-                onMouseDown={this.handleOnMouseDown}
-                onMouseUp={this.handleOnMouseUp}
+                onMouseDown={this.handleMouseDown}
+                onMouseUp={this.handleMouseUp}
+                onMouseMove={this.handleMouseMove}
                 style={{
                     width: this.props.cropDivWidth,
                     height: this.props.cropDivHeight,
-                    cursor: "move",
+                    cursor: this.state.cursor || "move",
                     left: this.props.left,
                     top: this.props.top
                 }}
-            >
-                <div className="RB" />
-                <div className="RT" />
-                <div className="LB" />
-                <div className="LT" />
-            </div>
+            />
         );
     }
 }

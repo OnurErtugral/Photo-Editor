@@ -19,11 +19,15 @@ A single page web application which enables users to edit their images. Build wi
 -   [ ] Validate inputs.
 -   [ ] Rewrite the crop component with `e.nativeEvent`
 
-## Live Demo :fire:
+## Live Demo
 
-https://photoeditor-b9663.web.app/
+https://photoeditor-b9663.firebaseapp.com/
 
-## How does it look like?
+## Watch YouTube Video
+
+https://www.youtube.com/watch?v=53omb2FfuU4
+
+## How does it look like? :fire:
 
 <p align="center">
 <img src="src/images/UI.png">

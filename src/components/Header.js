@@ -4,6 +4,7 @@ import ReactTooltip from "react-tooltip";
 
 import firebase from "../config/firebaseConfig";
 import "./header.css";
+
 let functions = firebase.functions();
 
 class Header extends Component {
@@ -151,7 +152,7 @@ class Header extends Component {
 
                                 <button
                                     className="btn btn-success"
-                                    onClick={this.props.handleDownloadImage}
+                                    onClick={this.props.setDownloadImageFlag}
                                     data-toggle="tooltip"
                                     data-placement="bottom"
                                     title="Download image"
@@ -170,7 +171,7 @@ class Header extends Component {
                     effect="solid"
                     clickable={true}
                 >
-                    <div class="inside-wrapper">
+                    <div className="inside-wrapper">
                         <input
                             type="email"
                             placeholder="Your email"
@@ -180,7 +181,7 @@ class Header extends Component {
                             className="btn btn-primary btn-sm"
                             onClick={this.handleSendEmail}
                         >
-                            <i class="far fa-paper-plane" />
+                            <i className="far fa-paper-plane" />
                         </button>
                     </div>
                     <small>We do not store your email address.</small>
@@ -195,8 +196,8 @@ const mapDispatchToProps = dispatch => {
         handleUploadedFile: e => {
             dispatch({ type: "HANDLE_FILE_UPLOAD", payload: e });
         },
-        handleDownloadImage: () => {
-            dispatch({ type: "HANDLE_DOWNLOAD_IMAGE" });
+        setDownloadImageFlag: () => {
+            dispatch({ type: "SET_DOWNLOAD_IMAGE_FLAG" });
         }
     };
 };

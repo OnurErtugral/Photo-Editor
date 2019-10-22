@@ -17,6 +17,7 @@ class Navbar extends Component {
             reader.readAsDataURL(file);
         }
     }
+
     render() {
         return (
             <div>

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import HTML5Backend from "react-dnd-html5-backend";
 import { DragDropContext } from "react-dnd";
 
@@ -72,7 +71,9 @@ class App extends Component {
                         </div>
 
                         <div className="footer">
-                            <Footer />
+                            <Footer
+                                showCropCanvas={this.props.showCropCanvas}
+                            />
                         </div>
                     </div>
                 </div>
@@ -100,7 +101,8 @@ const mapDispachToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        image: state.image
+        image: state.image,
+        showCropCanvas: state.showCropCanvas
     };
 };
 

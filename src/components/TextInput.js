@@ -23,17 +23,23 @@ class TextInput extends Component {
         const { classes } = this.props;
 
         return (
-            <div className="text-input-div">
+            <div className="text-input-div" style={{}}>
                 {this.props.showTextField ? (
                     <div
                         className="inside-text-input"
-                        style={{ margin: "2px 5px" }}
+                        style={{
+                            margin: "2px 5px",
+
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center"
+                        }}
                     >
                         <label
                             htmlFor="text-input"
                             style={{ color: "#f1f1f1" }}
                         >
-                            Your text:
+                            Your text
                         </label>
                         <input
                             type="text"
@@ -44,15 +50,17 @@ class TextInput extends Component {
                                 marginBottom: "7px"
                             }}
                             onChange={this.props.handleTextChange}
-                            name=""
-                            id=""
+                            value={this.props.textInput}
                         />
 
                         {/* TEXT SIZE */}
+                        <label
+                            htmlFor=""
+                            style={{ color: "#f1f1f1", marginTop: "10px" }}
+                        >
+                            Text Size: {Math.floor(this.props.textSize)}
+                        </label>
                         <div className={classes.root}>
-                            <label htmlFor="" style={{ color: "#f1f1f1" }}>
-                                Text Size: {Math.floor(this.props.textSize)}
-                            </label>
                             <Slider
                                 classes={{ container: classes.slider }}
                                 value={this.props.textSize}
@@ -61,7 +69,13 @@ class TextInput extends Component {
                             />
                         </div>
 
-                        <div style={{ marginTop: "12px" }}>
+                        <label
+                            htmlFor=""
+                            style={{ color: "#f1f1f1", marginTop: "10px" }}
+                        >
+                            Color
+                        </label>
+                        <div>
                             <HuePicker
                                 width="200px"
                                 onChangeComplete={
@@ -69,6 +83,14 @@ class TextInput extends Component {
                                 }
                             />
                         </div>
+
+                        {/* <button
+                            class="btn btn-primary btn-sm btn-block"
+                            style={{ marginTop: "20px" }}
+                            onClick={() => this.props.setSaveTextFlag(true)}
+                        >
+                            Save
+                        </button> */}
                     </div>
                 ) : null}
             </div>
@@ -83,7 +105,8 @@ TextInput.propTypes = {
 const mapStateToProps = state => {
     return {
         showTextField: state.showTextField,
-        textSize: state.textSize
+        textSize: state.textSize,
+        textInput: state.textInput
     };
 };
 
@@ -97,6 +120,9 @@ const mapDispatchToProps = dispatch => {
         },
         handleTextSizeChange: (event, value) => {
             dispatch({ type: "HANDLE_TEXT_SIZE_CHANGE", payload: value });
+        },
+        setSaveTextFlag: flag => {
+            dispatch({ type: "SET_SAVE_TEXT_FLAG", payload: flag });
         }
     };
 };

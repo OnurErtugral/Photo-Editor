@@ -27,7 +27,7 @@ class ScaleSlider extends Component {
                         className={classes.slider}
                         value={this.props.scaleValue}
                         max={200}
-                        min={40}
+                        min={10}
                         aria-labelledby="label"
                         onChange={this.props.handleScaleChange}
                     />

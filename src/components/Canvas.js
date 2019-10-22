@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { DropTarget } from "react-dnd";
 
-import "../canvas.css";
+import "./canvas.css";
 import CropElement from "./CropElement";
 
 const canvasTarget = {
@@ -31,6 +31,25 @@ class Canvas extends Component {
         this.canvasRef = React.createRef();
     }
 
+    componentWillMount() {
+        window.addEventListener("beforeunload", ev => {
+            ev.preventDefault();
+
+            // SAVE TO LOCAL STORAGE
+            const node = this.canvasRef.current;
+            let imgURL = node.toDataURL("image/png");
+            localStorage.removeItem("image");
+            localStorage.setItem(
+                "image",
+                JSON.stringify({
+                    name: this.props.imageName,
+                    url: imgURL,
+                    date: new Date()
+                })
+            );
+        });
+    }
+
     updateStateOnDrop(monitor) {
         const item = monitor.getItem();
         const delta = monitor.getDifferenceFromInitialOffset();
@@ -51,37 +70,51 @@ class Canvas extends Component {
         this.props.setCropDivLeftAndTopPlain(top, left);
     }
 
-    drawCanvas(img) {
+    drawCanvas(img, prevProps) {
         if (!this.props.width) {
-            if (img.height + 100 > this.props.canvasDivHeight) {
+            if (
+                img.height + 100 > this.props.canvasDivHeight ||
+                img.width + 250 > this.props.canvasDivWidth
+            ) {
                 // AUTO SCALE
-                let diff = img.height + 100 - this.props.canvasDivHeight;
-                if (diff > 1000) {
+                let diffHeight = img.height + 145 - this.props.canvasDivHeight;
+                let diffWidth = img.width + 250 - this.props.canvasDivWidth;
+                if (diffHeight > 3500 || diffWidth > 3500) {
+                    this.props.handleScaleChange(15);
+                } else if (diffHeight > 3000 || diffWidth > 3000) {
+                    this.props.handleScaleChange(20);
+                } else if (diffHeight > 2500 || diffWidth > 2500) {
+                    this.props.handleScaleChange(25);
+                } else if (diffHeight > 2000 || diffWidth > 2000) {
+                    this.props.handleScaleChange(30);
+                } else if (diffHeight > 1000 || diffWidth > 1000) {
                     this.props.handleScaleChange(40);
-                } else if (diff > 800) {
+                } else if (diffHeight > 800 || diffWidth > 800) {
                     this.props.handleScaleChange(50);
-                } else if (diff > 600) {
+                } else if (diffHeight > 600 || diffWidth > 600) {
                     this.props.handleScaleChange(60);
-                } else if (diff > 400) {
+                } else if (diffHeight > 400 || diffWidth > 400) {
                     this.props.handleScaleChange(70);
-                } else if (diff > 200) {
+                } else if (diffHeight > 200 || diffWidth > 200) {
                     this.props.handleScaleChange(80);
-                } else if (diff <= 200) {
+                } else if (diffHeight <= 200) {
                     this.props.handleScaleChange(95);
                 }
             }
             this.props.setWidthAndHeight(img.width, img.height);
         }
+
         const node = this.canvasRef.current;
         const context = node.getContext("2d");
 
-        // HORIZONTAL AND VERTICAL FLIP
+        // HORIZONTAL FLIP
         if (this.props.horizontalFlip) {
             context.translate(this.props.width, 0);
             context.scale(-1, 1);
             this.props.toggleHorizontalFlip(this.props.horizontalFlip);
         }
 
+        // VERTICAL FLIP
         if (this.props.verticalFlip) {
             context.translate(0, this.props.height);
             context.scale(1, -1);
@@ -91,12 +124,14 @@ class Canvas extends Component {
         // ROTATE IMAGE
         if (this.props.showRotateSection) {
             context.fillRect(0, 0, this.props.width, this.props.height);
+            context.fillStyle = "#000000";
 
             // Move registration point to the center of the canvas
             context.translate(this.props.width / 2, this.props.height / 2);
 
             context.rotate((this.props.rotateCanvas * Math.PI) / 180);
-            // Rotate 1 degree
+
+            // // Rotate 1 degree
             context.rotate((this.props.fineTuneRotate * Math.PI) / 180);
 
             // Move registration point back to the top left corner of canvas
@@ -146,9 +181,9 @@ class Canvas extends Component {
                 width: this.props.cropDivWidth,
                 height: this.props.cropDivHeight
             });
-        } else {
-            context.drawImage(img, 0, 0, this.props.width, this.props.height);
         }
+
+        context.drawImage(img, 0, 0, this.props.width, this.props.height);
 
         // TEXT
         context.font = "bold " + this.props.textSize + "px Arial";
@@ -160,73 +195,48 @@ class Canvas extends Component {
             this.props.height / 2
         );
 
-        let imgURL = node.toDataURL("image/png");
-        this.props.setImgURL(imgURL);
-        if (this.props.imgURLFlag) {
+        if (this.props.downloadImageFlag) {
+            let imgURL = node.toDataURL("image/png");
+            this.props.setImgURL(imgURL);
             this.props.downloadImage(imgURL);
         }
-        // SAVE TO LOCAL STORAGE
-        if (this.props.image) {
-            localStorage.removeItem("image");
-            localStorage.setItem(
-                "image",
-                JSON.stringify({
-                    name: this.props.imageName,
-                    url: imgURL,
-                    date: new Date()
-                })
-            );
+    }
+
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.showCropCanvas !== this.props.showCropCanvas ||
+            prevProps.showRotateSection !== this.props.showRotateSection ||
+            prevProps.showSlider !== this.props.showSlider ||
+            prevProps.showTextField !== this.props.showTextField
+        ) {
+        } else {
+            var img = new Image();
+            img.src = this.props.image;
+            img.onload = () => this.drawCanvas(img, prevProps);
         }
     }
 
-    componentDidUpdate() {
-        var img = new Image();
-        img.src = this.props.image;
-        img.onload = () => this.drawCanvas(img);
-    }
+    handleMouseUp = e => {
+        let mouseXInCropElement = e.nativeEvent.offsetX;
+        let mouseYInCropElement = e.nativeEvent.offsetY;
 
-    handleOnMouseUp = e => {
+        let diffX =
+            mouseXInCropElement -
+            (this.props.cropDivClickInitialX + this.props.cropDivLeft);
+
+        let diffY =
+            mouseYInCropElement -
+            (this.props.cropDivClickInitialY + this.props.cropDivTop);
+
         if (this.props.cropDivClickedResizeRegion === "RB") {
-            let postion = this.canvasRef.current.getBoundingClientRect();
-
-            let mouseX = e.screenX;
-            let mouseY = e.screenY;
-
-            let diffX = mouseX - this.props.cropDivClickInitialX;
-            let diffY = mouseY - this.props.cropDivClickInitialY;
-
-            // if (
-            //     this.props.cropDivLeft + 10 < mouseX ||
-            //     this.props.cropDivTop + 10 > mouseY
-            // ) {
-            //     console.log("dangerouss!");
-            // }
-
             this.props.setCropDivSize("RB", diffX, diffY);
         } else if (this.props.cropDivClickedResizeRegion === "RT") {
-            let mouseX = e.screenX;
-            let mouseY = e.screenY;
-
-            let diffX = mouseX - this.props.cropDivClickInitialX;
-            let diffY = mouseY - this.props.cropDivClickInitialY;
-
             this.props.setCropDivLeftAndTop(diffY, 0);
             this.props.setCropDivSize("RT", diffX, -diffY);
         } else if (this.props.cropDivClickedResizeRegion === "LT") {
-            let mouseX = e.screenX;
-            let mouseY = e.screenY;
-
-            let diffX = mouseX - this.props.cropDivClickInitialX;
-            let diffY = mouseY - this.props.cropDivClickInitialY;
-
             this.props.setCropDivLeftAndTop(diffY, diffX);
             this.props.setCropDivSize("LT", -diffX, -diffY);
         } else if (this.props.cropDivClickedResizeRegion === "LB") {
-            let mouseX = e.screenX;
-            let mouseY = e.screenY;
-
-            let diffX = mouseX - this.props.cropDivClickInitialX;
-            let diffY = mouseY - this.props.cropDivClickInitialY;
             this.props.setCropDivLeftAndTop(0, diffX);
             this.props.setCropDivSize("LT", -diffX, diffY);
         }
@@ -239,7 +249,6 @@ class Canvas extends Component {
             <div
                 id="canvas-wrap"
                 style={{
-                    transform: "scale(" + this.props.scaleValue / 100 + ")",
                     maxHeight: this.props.canvasDivHeight - 50,
                     maxWidth: this.props.canvasDivWidth
                 }}
@@ -248,8 +257,11 @@ class Canvas extends Component {
                     ref={this.canvasRef}
                     width={this.props.width || 500}
                     height={this.props.height || 500}
-                    onMouseUp={this.handleOnMouseUp}
+                    onMouseUp={this.handleMouseUp}
                     onMouseMove={this.handleOnMouseMove}
+                    style={{
+                        transform: "scale(" + this.props.scaleValue / 100 + ")"
+                    }}
                 />
                 {this.props.showCropCanvas ? (
                     <CropElement
@@ -281,7 +293,7 @@ const mapStateToProps = state => {
         showTextField: state.showTextField,
         inputColor: state.inputColor,
         textSize: state.textSize,
-        imgURLFlag: state.imgURLFlag,
+        downloadImageFlag: state.downloadImageFlag,
         scaleValue: state.scaleValue,
         horizontalFlip: state.horizontalFlip,
         verticalFlip: state.verticalFlip,
@@ -297,7 +309,8 @@ const mapStateToProps = state => {
         cropDivHeight: state.cropDivHeight,
         cropDivTop: state.cropDivTop,
         cropDivLeft: state.cropDivLeft,
-        cropImage: state.cropImage
+        cropImage: state.cropImage,
+        showSlider: state.showSlider
     };
 };
 

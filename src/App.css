@@ -51,7 +51,7 @@ body {
 .footer {
     background-color: #313131;
     color: #00b8e6;
-    max-height: 75px;
+    height: 42px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -68,6 +68,7 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    z-index: 999;
 }
 
 .side-menu .icons {
@@ -99,6 +100,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: auto;
 }
 
 .content canvas {
