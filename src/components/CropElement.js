@@ -36,11 +36,6 @@ class CropElement extends Component {
     }
 
     handleMouseDown = e => {
-        let postion = this.overlappingDiv.current.getBoundingClientRect();
-        let canvasPosition = this.props.canvasRef.current.getBoundingClientRect();
-
-        // console.log("canvasPOsiton.TOP: " + canvasPosition.top);
-
         let mouseXInCropElement = e.nativeEvent.offsetX;
         let mouseYInCropElement = e.nativeEvent.offsetY;
 
@@ -85,7 +80,6 @@ class CropElement extends Component {
     };
 
     handleMouseUp = e => {
-        // console.log("mouse up");
         let mouseXInCropElement = e.nativeEvent.offsetX;
         let mouseYInCropElement = e.nativeEvent.offsetY;
 
@@ -109,7 +103,6 @@ class CropElement extends Component {
     handleMouseMove = e => {
         let mouseXInCropElement = e.nativeEvent.offsetX;
         let mouseYInCropElement = e.nativeEvent.offsetY;
-        // console.log("INSIDE MOVE");
         if (mouseXInCropElement < 10 && mouseYInCropElement < 10) {
             this.setState({ cursor: "se-resize" });
         } else if (

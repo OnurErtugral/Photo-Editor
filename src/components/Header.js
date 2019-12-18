@@ -5,8 +5,6 @@ import ReactTooltip from "react-tooltip";
 import firebase from "../config/firebaseConfig";
 import "./header.css";
 
-let functions = firebase.functions();
-
 class Header extends Component {
     constructor(props) {
         super(props);

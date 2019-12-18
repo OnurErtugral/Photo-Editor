@@ -8,12 +8,10 @@ import "./App.css";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import Canvas from "./components/Canvas";
-
 import BrightnessSlider from "./components/sliders/BrightnessSlider";
 import ContrastSlider from "./components/sliders/ContrastSlider";
 import BlurSlider from "./components/sliders/BlurSlider";
 import SaturateSlider from "./components/sliders/SaturateSlider";
-import ScaleSlider from "./components/sliders/ScaleSlider";
 import ReturnDefaultButton from "./components/sliders/ReturnDefaultButton";
 import TextInput from "./components/TextInput";
 import ResizeSection from "./components/ResizeSection";

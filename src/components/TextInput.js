@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { HuePicker } from "react-color";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/lab/Slider";
 
 const styles = {
@@ -83,14 +82,6 @@ class TextInput extends Component {
                                 }
                             />
                         </div>
-
-                        {/* <button
-                            class="btn btn-primary btn-sm btn-block"
-                            style={{ marginTop: "20px" }}
-                            onClick={() => this.props.setSaveTextFlag(true)}
-                        >
-                            Save
-                        </button> */}
                     </div>
                 ) : null}
             </div>

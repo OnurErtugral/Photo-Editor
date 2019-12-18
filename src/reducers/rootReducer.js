@@ -36,7 +36,7 @@ const initialState = {
     saveTextFlag: false
 };
 
-const UploadImageReducer = (state = initialState, action) => {
+const rootReducer = (state = initialState, action) => {
     if (action.type === "HANDLE_FILE_UPLOAD") {
         return {
             ...state,
@@ -326,4 +326,4 @@ const UploadImageReducer = (state = initialState, action) => {
     return state;
 };
 
-export default UploadImageReducer;
+export default rootReducer;
