@@ -6,10 +6,6 @@ A single page web application which enables users to edit their images. Build wi
 <img src="src/images/UI.png">
 </p>
 
-## Live Demo
-
-https://photoeditor-b9663.firebaseapp.com/
-
 ## Watch YouTube Video
 
 https://www.youtube.com/watch?v=53omb2FfuU4
