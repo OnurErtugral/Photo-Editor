@@ -12,16 +12,15 @@ https://www.youtube.com/watch?v=53omb2FfuU4
 
 ## User Stories
 
--   [x] User can upload images via `drag and drop`, or via classic File Uploader.
--   [x] User can `resize` images.
--   [x] User can `crop` images.
--   [x] User can change `Brightness`, `Contrast`, `Saturation` and `Blur` of images.
--   [x] User can `rotate` and `flip` images.
--   [x] User can `add text` to images.
--   [x] User can `download` the edited version of an image, or send it via `e-mail`.
+-   [x] Upload images via `drag and drop` or via classic File Uploader.
+-   [x] `resize` and `crop` images.
+-   [x] Adjust the `Brightness`, `Contrast`, `Saturation` and `Blur` of images.
+-   [x] `rotate` and `flip` images.
+-   [x] `add text` to images.
+-   [x] `download` the edited version of an image or send it via `e-mail`.
 -   [x] If an image is too big to fit the screen, app zooms out automatically. Also, user can change this `scaling factor` by using the slider in the footer.
 -   [x] Edited version of images are stored in the `local storage`. Thus, users can continue editing where they left off, when they return.
 
 ## TODO
 
--   [ ] Validate inputs.
+-   [ ] Input validation.
